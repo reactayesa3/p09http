@@ -23,11 +23,11 @@ function App() {
       <Routes>
         <Route path="/" element={<Inicio />}/>
         <Route path="/ventas/*" element={
-          <ProtectVentasRoute>
+          // <ProtectVentasRoute>
             <React.Suspense fallback={<p style={{textAlign: 'center'}}>Cargando...</p>}>
               <InicioVentas />
             </React.Suspense>
-          </ProtectVentasRoute>
+          // </ProtectVentasRoute>
         } />
         <Route path="/recursos-humanos/*" element={
           <React.Suspense fallback={<p style={{textAlign: 'center'}}>Cargando...</p>}>
