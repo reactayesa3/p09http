@@ -1,11 +1,14 @@
 import React, { useEffect, useState } from 'react'
 import { Link } from 'react-router-dom'
+import useDebounce from '../../hooks/useDebounce';
 import { getClientes, searchClientes } from './ClientesService';
 
 export default function DashboardClientes() {
 
     const [clientes, setClientes] = useState([]);
     const [term, setTerm] = useState('');
+    const [isLoading, setIsLoading] = useState(false);
+    const {debounceValue} = useDebounce(term, 500);
 
     // useEffect(() => {
     //     const getClientesRespose = async () => {
@@ -36,14 +39,21 @@ export default function DashboardClientes() {
     }
 
     useEffect(() => {
-        if(term.length > 0) {
+        if(debounceValue.length > 0) {
+            setIsLoading(true);
             searchClientes(term)
-                .then(resp => setClientes(resp.data.clientes))
-                .catch(err => console.log(err))
+                .then(resp => {
+                    setClientes(resp.data.clientes);
+                    setIsLoading(false);
+                })
+                .catch(err => {
+                    console.log(err);
+                    setIsLoading(false);
+                })
         } else {
             setClientes([])
         }
-    }, [term])
+    }, [debounceValue])
 
     return (
         <div className="container">
@@ -64,18 +74,22 @@ export default function DashboardClientes() {
                     </tr>
                 </thead>
                 <tbody>
-                    {clientes.map(cliente => {
-                        return (
-                            <tr key={cliente._id}>
-                                <td>{cliente.nombre}</td>
-                                <td>
-                                    <Link to={`/ventas/editar-cliente/${cliente.cif}`}>
-                                        Visualizar
-                                    </Link>
-                                </td>
-                            </tr>
-                        )
-                    })}
+                    {isLoading ? 
+                        <tr><td colSpan={2} style={{textAlign: 'center'}}>Cargando...</td></tr>
+                        :
+                        clientes.map(cliente => {
+                            return (
+                                <tr key={cliente._id}>
+                                    <td>{cliente.nombre}</td>
+                                    <td>
+                                        <Link to={`/ventas/editar-cliente/${cliente.cif}`}>
+                                            Visualizar
+                                        </Link>
+                                    </td>
+                                </tr>
+                            )
+                        })
+                    }
                 </tbody>
             </table>
         </div>
