@@ -21,3 +21,7 @@ export function addCliente(cliente) {
 export function updateCliente(_id, cliente) {
     return axios.put(clientesEndPoint + _id, cliente);
 }
+
+export function deleteCliente(_id) {
+    return axios.delete(clientesEndPoint + _id);
+} 
