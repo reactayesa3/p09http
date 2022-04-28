@@ -6,32 +6,45 @@ import { addCliente } from './ClientesService'
 export default function CrearCliente() {
 
     const navigate = useNavigate();
-    const [values, setValues] = useState({
+    const [cliente, setCliente] = useState({
         nombre: '',
-        cif: '',
-        localidad: ''
+        actividades: '',
+        direccion: '',
+        localidad: '',
     })
+    const [isLoading, setIsLoading] = useState(false);
 
     const handleOnChange = e => {
-        setValues({
-            ...values,
+        setCliente({
+            ...cliente,
             [e.target.name]: e.target.value
         })
     }
 
     const handleOnSubmit = e => {
         e.preventDefault();
-        addCliente(values);
-        navigate('/ventas/dashboard-clientes'); // Navegación programática
+        setIsLoading(true);
+        addCliente(cliente)
+            .then(resp => {
+                // Lógica con la respuesta
+                setIsLoading(false);
+                navigate('/ventas/dashboard-clientes'); // Navegación programática
+            })
+            .catch(err => {
+                // Lógica con mensaje toast
+                setIsLoading(false);
+                console.log(err);
+            })
+        
     }
 
     return (
         <div className="container">
             <h1>Nuevo cliente</h1>
             <form onSubmit={handleOnSubmit}>
-                <FormCliente />
+                <FormCliente cliente={cliente} handleOnChange={handleOnChange}/>
                 <div className="row end">
-                    <button type="submit">Añadir</button>
+                    {isLoading ? <button disabled>Espere...</button>: <button type="submit">Añadir</button>}
                 </div>
             </form>
         </div>
