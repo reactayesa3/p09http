@@ -1,40 +1,56 @@
 import React, { useEffect, useState } from 'react'
-import { Link, useParams } from 'react-router-dom';
-import { getClienteByCif } from './ClientesService';
+import { Link, useNavigate, useParams } from 'react-router-dom';
+import FormCliente from '../components/FormCliente';
+import { getClienteBy_id, updateCliente } from './ClientesService';
 
 export default function EditarCliente() {
 
     const params = useParams();
-    const [cliente, setCliente] = useState({});
+    const navigate = useNavigate();
+    const [cliente, setCliente] = useState({
+        nombre: '',
+        actividades: '',
+        direccion: '',
+        localidad: '',
+    });
 
     useEffect(() => {
-        setCliente(getClienteByCif(params.cif))
+        getClienteBy_id(params._id)
+                .then(resp =>  {
+                    const {nombre, actividades, direccion, localidad} = resp.data.cliente;
+                    setCliente({nombre, actividades, direccion, localidad});
+                })
+                .catch(err => console.log(err));
     }, [params])
+
+    const handleOnChange = e => {
+        setCliente({
+            ...cliente,
+            [e.target.name]: e.target.value
+        })
+    }
+
+    const handleOnSubmit = e => {
+        e.preventDefault();
+        updateCliente(params._id, cliente)
+                .then(resp => {
+                    navigate('/ventas/dashboard-clientes');
+                })
+                .catch(err => console.log(err))
+
+    }
 
     return (
         <div className="container">
-            <h1>Detalle de cliente</h1>
-            <table>
-                <tbody>
-                    <tr>
-                        <th>Nombre</th>
-                        <td>{cliente.nombre}</td>
-                    </tr>
-                    <tr>
-                        <th>CIF</th>
-                        <td>{cliente.cif}</td>
-                    </tr>
-                    <tr>
-                        <th>Localidad</th>
-                        <td>{cliente.localidad}</td>
-                    </tr>
-                </tbody>
-            </table>
-            <div className="row end">
-                <Link to="/ventas/dashboard-clientes">
-                    <button>Atrás</button>
-                </Link>
-            </div>
+           <form onSubmit={handleOnSubmit}>
+                <FormCliente cliente={cliente} handleOnChange={handleOnChange} />
+                <div className="row end">
+                    <Link to="/ventas/dashboard-clientes">
+                        <button>Atrás</button>
+                    </Link>
+                    <button type="submit">Guardar cambios</button>
+                </div>
+           </form>
         </div>
     )
 }

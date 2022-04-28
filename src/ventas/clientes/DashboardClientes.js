@@ -82,7 +82,7 @@ export default function DashboardClientes() {
                                 <tr key={cliente._id}>
                                     <td>{cliente.nombre}</td>
                                     <td>
-                                        <Link to={`/ventas/editar-cliente/${cliente.cif}`}>
+                                        <Link to={`/ventas/editar-cliente/${cliente._id}`}>
                                             Visualizar
                                         </Link>
                                     </td>

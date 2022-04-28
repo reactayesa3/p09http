@@ -1,7 +1,5 @@
 import axios from 'axios';
 
-let clientes = []
-
 const clientesEndPoint = 'http://localhost:8080/clientes/';
 
 export function getClientes() {
@@ -12,10 +10,14 @@ export function searchClientes(term) {
     return axios.get(clientesEndPoint + 'search/' + term);
 }
 
-export function getClienteByCif(cif) {
-    return clientes.filter(cliente => cliente.cif === cif)[0];
+export function getClienteBy_id(_id) {
+    return axios.get(clientesEndPoint + _id);
 }
 
 export function addCliente(cliente) {
     return axios.post(clientesEndPoint, cliente);
+}
+
+export function updateCliente(_id, cliente) {
+    return axios.put(clientesEndPoint + _id, cliente);
 }

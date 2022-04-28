@@ -11,7 +11,7 @@ export default function InicioVentas() {
         <Route index element={<InicioVentasLayout />}/>
         <Route path="dashboard-clientes" element={<DashboardClientes />} />
         <Route path="crear-cliente" element={<CrearCliente />} />
-        <Route path="editar-cliente/:cif" element={<EditarCliente />}/>
+        <Route path="editar-cliente/:_id" element={<EditarCliente />}/>
      </Routes>
   )
 }
