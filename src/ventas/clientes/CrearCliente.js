@@ -42,7 +42,7 @@ export default function CrearCliente() {
         <div className="container">
             <h1>Nuevo cliente</h1>
             <form onSubmit={handleOnSubmit}>
-                <FormCliente cliente={cliente} handleOnChange={handleOnChange}/>
+                <FormCliente cliente={cliente} handleOnChange={handleOnChange} isEditionMode={true}/>
                 <div className="row end">
                     {isLoading ? <button disabled>Espere...</button>: <button type="submit">Añadir</button>}
                 </div>
